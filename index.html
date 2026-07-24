@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="author" content="David Lee Wise / ROOT0 / TriPod LLC">
+<title>THE REDSHIFT · OURANOS · UD0</title>
+<style>
+*{box-sizing:border-box}
+:root{--blue:#3a5bbf;--blue2:#2a3f7a;--ink:#26324f;--gold:#c8952e;--dim:#6d7186;
+  --grn:#2e8b57;--red:#b0463a;
+  --panel:rgba(252,248,238,.78);--edge:rgba(58,91,191,.28);--edge2:rgba(58,91,191,.14)}
+html,body{margin:0;height:100%}
+body{background:#f2ecdd;color:var(--ink);font:15px/1.55 'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+#bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+.wrap{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:26px 20px 60px}
+.dtag{font:600 11px/1 ui-monospace,'Cascadia Code','Segoe UI Mono',monospace;letter-spacing:.32em;text-transform:uppercase;color:var(--blue2)}
+.dtag b{color:var(--blue)}
+h1{margin:.35em 0 .1em;font-size:clamp(26px,4.6vw,42px);font-weight:800;letter-spacing:.01em;color:#1e2842;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.sub{color:#3d4664;max-width:66ch;margin:.2em 0 0}
+.tier{display:inline-flex;gap:6px;align-items:center;margin-top:14px;font:600 11px/1 ui-monospace,monospace;letter-spacing:.14em}
+.chip{padding:5px 10px;border-radius:999px;border:1px solid var(--edge);background:var(--panel)}
+.chip.lit{color:var(--grn);border-color:rgba(46,139,87,.5)}
+.chip.amb{color:var(--gold);border-color:rgba(200,149,46,.55)}
+.chip.wall{color:var(--red);border-color:rgba(176,70,58,.45)}
+.card{margin-top:20px;background:var(--panel);border:1px solid var(--edge);border-radius:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 14px 40px rgba(40,60,120,.14)}
+.stagewrap{padding:14px}
+#stage{width:100%;height:auto;display:block;border-radius:10px;background:rgba(250,246,236,.72);border:1px solid rgba(58,91,191,.14)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:0 14px 14px}
+.btn{cursor:pointer;border:1px solid var(--edge);background:rgba(238,242,252,.85);color:var(--ink);padding:9px 14px;border-radius:10px;font:600 13px/1 'Segoe UI',system-ui;letter-spacing:.02em;transition:.15s}
+.btn:hover{border-color:var(--blue);box-shadow:0 0 14px rgba(58,91,191,.22)}
+.btn.on{background:linear-gradient(180deg,#4f70d6,#3a5bbf);border-color:#3a5bbf;color:#f4f7ff}
+.rng{display:flex;align-items:center;gap:8px;font:600 12px ui-monospace,monospace;color:var(--blue2)}
+input[type=range]{accent-color:var(--blue)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--edge2);border-top:1px solid var(--edge);border-radius:0 0 16px 16px;overflow:hidden}
+.ro{background:var(--panel);padding:11px 14px}
+.ro .k{font:600 10px ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--blue2)}
+.ro .v{font:700 19px ui-monospace,monospace;margin-top:3px;color:var(--ink)}
+.ro .v.g{color:var(--grn)} .ro .v.r{color:var(--red)} .ro .v.a{color:var(--gold)} .ro .v.c{color:var(--blue)}
+.honesty{margin-top:22px;display:grid;gap:10px}
+.hz{background:var(--panel);border:1px solid var(--edge);border-left-width:3px;border-radius:10px;padding:12px 15px}
+.hz.lit{border-left-color:var(--grn)} .hz.amb{border-left-color:var(--gold)} .hz.wall{border-left-color:var(--red)}
+.hz h4{margin:0 0 4px;font:700 11px ui-monospace,monospace;letter-spacing:.16em}
+.hz.lit h4{color:var(--grn)} .hz.amb h4{color:var(--gold)} .hz.wall h4{color:var(--red)}
+.hz p{margin:0;color:#39415e;font-size:13.5px}
+.law{margin-top:16px;text-align:center;color:var(--blue2);font:italic 500 13px/1.5 Georgia,serif}
+.sig{margin-top:26px;text-align:center;color:var(--blue2);font:600 11px ui-monospace,monospace;letter-spacing:.14em}
+.sig b{color:var(--ink)}
+#fail{display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:#2a1410;border:1px solid #b0463a;color:#ffd7d0;padding:12px 15px;border-radius:10px;font:12px ui-monospace,monospace;white-space:pre-wrap}
+</style></head><body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+  <div class="dtag">✦ <b>OURANOS</b> · the domain that looks up</div>
+  <h1>THE REDSHIFT</h1>
+  <p class="sub">The galaxies are not sitting still — the space between us and them is stretching, and it stretches their light along the way. The farther a galaxy, the faster it flees, and the redder it burns. That simple line — velocity rises with distance — is how we learned the universe expands.</p>
+  <div class="tier"><span class="chip lit">◆ LIT</span><span class="chip amb">▲ AMBER</span></div>
+  <div class="card">
+    <div class="stagewrap"><canvas id="stage" width="900" height="440"></canvas></div>
+    <div class="controls"><span class="rng">DISTANCE (Mpc) <input type="range" id="dist" min="10" max="900" value="200"></span><span class="rng">H₀ <input type="range" id="h0" min="60" max="76" value="70"></span><button class="btn" id="reset">↺</button></div>
+    <div class="readout"><div class="ro"><div class="k">distance</div><div class="v" id="roD">200 Mpc</div></div><div class="ro"><div class="k">recession velocity</div><div class="v" id="roV">—</div></div><div class="ro"><div class="k">redshift z</div><div class="v" id="roZ">—</div></div><div class="ro"><div class="k">lookback</div><div class="v" id="roLb">—</div></div><div class="ro"><div class="k">regime</div><div class="v" id="roReg">—</div></div></div>
+  </div>
+  <div class="honesty">
+    <div class="hz lit"><h4>◆ LIT — verified / checkable</h4><p>Hubble's law, exactly: recession velocity v = H₀·d, with H₀ ≈ 70 km/s/Mpc (adjustable), and the redshift z = v/c for the low-z regime shown. Both are computed live and the spectral lines slide redward by Δλ/λ = z — a real, linear distance–velocity relation, the observational bedrock of cosmic expansion. Lookback time is estimated as ≈ d/c. The line is straight because expansion is (to first order) uniform.</p></div>
+    <div class="hz amb"><h4>▲ AMBER — the figure</h4><p>'The galaxies flee', 'the universe expands' — the picture is real but the instrument uses the low-redshift linear approximation (z = v/c); at large z the exact relativistic/cosmological treatment departs from a straight line, and H₀ itself is contested (the Hubble tension). Redshift is cosmological stretching of space, not a literal Doppler flight — the toy Doppler framing is the figure.</p></div>
+    
+  </div>
+  <div class="law">OURANOS: the heavens are measured, not merely admired — every light up there is a number we can reach by geometry.</div>
+  <div class="sig">David Lee Wise / ROOT0 / TriPod LLC &nbsp;·&nbsp; with <b>AVAN</b></div>
+</div>
+<div id="fail"></div>
+<script>
+window.onerror=function(m,s,l,c,e){var f=document.getElementById('fail');if(f){f.style.display='block';f.textContent='⚠ '+m+' @'+l+':'+c+(e&&e.stack?'\n'+e.stack:'');}};
+</script>
+<script>
+(function(){
+  var cv=document.getElementById('bg'); if(!cv) return;
+  function fallback(){var c=cv.getContext&&cv.getContext('2d');if(!c)return;
+    function f(){var w=cv.width=innerWidth,h=cv.height=innerHeight;
+      var g=c.createRadialGradient(w*0.5,h*0.42,0,w*0.5,h*0.42,Math.max(w,h)*0.8);
+      g.addColorStop(0,'#f6f0e2');g.addColorStop(1,'#e9dfca');c.fillStyle=g;c.fillRect(0,0,w,h);}
+    f();addEventListener('resize',f);}
+  var gl;try{gl=cv.getContext('webgl',{antialias:true,alpha:false})||cv.getContext('experimental-webgl');}catch(e){}
+  if(!gl){fallback();return;}
+  function m4mul(a,b){var o=new Array(16);for(var r=0;r<4;r++)for(var c=0;c<4;c++){var s=0;for(var k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+  function persp(f,asp,n,fa){var t=1/Math.tan(f/2);return[t/asp,0,0,0,0,t,0,0,0,0,(fa+n)/(n-fa),-1,0,0,(2*fa*n)/(n-fa),0];}
+  function rotY(a){var c=Math.cos(a),s=Math.sin(a);return[c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1];}
+  function rotX(a){var c=Math.cos(a),s=Math.sin(a);return[1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1];}
+  function rotZ(a){var c=Math.cos(a),s=Math.sin(a);return[c,s,0,0,-s,c,0,0,0,0,1,0,0,0,0,1];}
+  function trans(x,y,z){return[1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1];}
+  // rings: equator (XZ), ecliptic (tilt 23.4 about X), two meridians (XY, YZ)
+  var lineSegs=[], N=72, R=1.55;
+  function ring(mat){for(var i=0;i<N;i++){var a=i/N*2*Math.PI,b=(i+1)/N*2*Math.PI;
+    var A=[Math.cos(a)*R,0,Math.sin(a)*R], B=[Math.cos(b)*R,0,Math.sin(b)*R];
+    function tf(p){return [mat[0]*p[0]+mat[4]*p[1]+mat[8]*p[2], mat[1]*p[0]+mat[5]*p[1]+mat[9]*p[2], mat[2]*p[0]+mat[6]*p[1]+mat[10]*p[2]];}
+    A=tf(A);B=tf(B);lineSegs.push(A[0],A[1],A[2],B[0],B[1],B[2]);}}
+  ring(rotX(0));                 // equator
+  ring(rotX(0.4084));            // ecliptic (23.4deg)
+  ring(m4mul(rotZ(Math.PI/2),rotX(0)));  // meridian
+  ring(rotZ(Math.PI/2));         // other meridian
+  var lbuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,lbuf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lineSegs),gl.STATIC_DRAW);
+  // stars: pseudo-random points on the sphere
+  var star=[]; var seed=7; function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+  for(var i=0;i<140;i++){var u=rnd()*2-1,th=rnd()*2*Math.PI,r2=Math.sqrt(1-u*u);star.push(r2*Math.cos(th)*R,u*R,r2*Math.sin(th)*R);}
+  var sbuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,sbuf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(star),gl.STATIC_DRAW);
+  var VS='attribute vec3 p;uniform mat4 mvp;uniform float ps;varying float d;void main(){vec4 q=mvp*vec4(p,1.0);d=p.y;gl_Position=q;gl_PointSize=ps;}';
+  var FS='precision mediump float;varying float d;uniform vec3 col;uniform float amul;void main(){float a=(0.5+0.5*(d/1.6));gl_FragColor=vec4(col,clamp(a*amul,0.05,0.5));}';
+  function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o;}
+  var prog;try{prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw'link';}catch(e){fallback();return;}
+  gl.useProgram(prog);var aP=gl.getAttribLocation(prog,'p'),uMVP=gl.getUniformLocation(prog,'mvp'),uPS=gl.getUniformLocation(prog,'ps'),uCol=gl.getUniformLocation(prog,'col'),uAm=gl.getUniformLocation(prog,'amul');
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  var t0=null;
+  function frame(t){requestAnimationFrame(frame);if(t0===null)t0=t;var tt=(t-t0)*0.001;
+    var w=cv.width=innerWidth,h=cv.height=innerHeight;gl.viewport(0,0,w,h);
+    gl.clearColor(0.949,0.925,0.867,1.0);gl.clear(gl.COLOR_BUFFER_BIT);
+    var pr=persp(1.0,w/h,0.1,50);var mv=m4mul(trans(0,0,-4.4),m4mul(rotX(-0.45),rotY(tt*0.09)));
+    gl.uniformMatrix4fv(uMVP,false,m4mul(pr,mv));
+    // stars (gold)
+    gl.bindBuffer(gl.ARRAY_BUFFER,sbuf);gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,0,0);
+    gl.uniform1f(uPS,2.5);gl.uniform3f(uCol,0.78,0.58,0.18);gl.uniform1f(uAm,1.0);gl.drawArrays(gl.POINTS,0,star.length/3);
+    // rings (celestial blue)
+    gl.bindBuffer(gl.ARRAY_BUFFER,lbuf);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,0,0);
+    gl.uniform1f(uPS,1.0);gl.uniform3f(uCol,0.25,0.36,0.75);gl.uniform1f(uAm,0.6);gl.lineWidth(1);gl.drawArrays(gl.LINES,0,lineSegs.length/3);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>
+(function(){
+  var cv=document.getElementById('stage'); var ctx=cv&&cv.getContext('2d'); if(!ctx)return;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  function size(){var w=cv.clientWidth||900;cv.width=Math.round(w*DPR);cv.height=Math.round((w*440/900)*DPR);}
+  size(); addEventListener('resize',size);
+  var env={cv:cv,ctx:ctx,DPR:DPR,W:function(){return cv.width/DPR;},H:function(){return cv.height/DPR;},
+    set:function(id,val,cls){var e=document.getElementById(id);if(e){e.textContent=val;if(cls!=null)e.className='v '+cls;}}};
+  var t0=null, inited=false;
+  function loop(t){requestAnimationFrame(loop);if(t0===null)t0=t;env.t=(t-t0)*0.001;
+    if(!inited&&window.__INST__){inited=true;if(window.__INST__.init)window.__INST__.init(env);}
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if(window.__INST__&&window.__INST__.draw)window.__INST__.draw(env);}
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+  var d=200, H0=70, cc=299792, ENV;
+  function refresh(){if(!ENV)return;var v=H0*d, z=v/cc;
+    ENV.set('roD',d+' Mpc');ENV.set('roV',v.toFixed(0)+' km/s','c');
+    ENV.set('roZ',z.toFixed(4),z<0.05?'g':(z<0.15?'a':'r'));
+    ENV.set('roLb',(d*3.26).toFixed(0)+' Myr');
+    ENV.set('roReg',z<0.1?'linear — Hubble law holds':'high-z — line bends',z<0.1?'g':'a');}
+  window.__INST__={init:function(env){ENV=env;
+    document.getElementById('dist').oninput=function(e){d=+e.target.value;refresh();};
+    document.getElementById('h0').oninput=function(e){H0=+e.target.value;refresh();};
+    document.getElementById('reset').onclick=function(){d=200;H0=70;document.getElementById('dist').value=200;document.getElementById('h0').value=70;refresh();};refresh();},
+   draw:function(env){var c=env.ctx,w=env.W(),h=env.H(),t=env.t;c.clearRect(0,0,w,h);
+     var z=(H0*d)/cc;
+     // Hubble diagram (top-left): v vs d line
+     var x0=44,y0=h*0.46,pw=w*0.44,ph=h*0.34;
+     c.strokeStyle='rgba(58,91,191,.35)';c.lineWidth=1;c.beginPath();c.moveTo(x0,y0-ph);c.lineTo(x0,y0);c.lineTo(x0+pw,y0);c.stroke();
+     c.strokeStyle='#3a5bbf';c.lineWidth=2;c.beginPath();c.moveTo(x0,y0);c.lineTo(x0+pw,y0-ph);c.stroke();
+     var dx=x0+(d/900)*pw, dv=(H0*d)/(76*900)*ph;c.fillStyle='#c8952e';c.beginPath();c.arc(dx,y0-dv,5,0,7);c.fill();
+     c.fillStyle='rgba(109,113,134,.8)';c.font='600 10px ui-monospace,monospace';c.textAlign='left';c.fillText('v = H₀·d',x0+8,y0-ph+12);c.fillText('distance →',x0+pw-70,y0+16);
+     // spectrum (right): rest lines vs shifted
+     var sx=w*0.56,sw=w*0.4,sy=h*0.28;
+     c.fillStyle='rgba(38,50,79,.6)';c.font='600 11px ui-monospace,monospace';c.fillText('rest frame',sx,sy-10);c.fillText('observed (z='+z.toFixed(3)+')',sx,sy+64);
+     c.fillStyle='rgba(58,91,191,.5)';c.fillRect(sx,sy,sw,20);c.fillStyle='rgba(58,91,191,.5)';c.fillRect(sx,sy+74,sw,20);
+     var lines=[0.2,0.35,0.55,0.7];
+     for(var i=0;i<lines.length;i++){var lx=sx+lines[i]*sw;c.strokeStyle='#26324f';c.lineWidth=2;c.beginPath();c.moveTo(lx,sy);c.lineTo(lx,sy+20);c.stroke();
+       var sh=Math.min(1,lines[i]*(1+z*3));var lx2=sx+sh*sw;c.strokeStyle='#b0463a';c.beginPath();c.moveTo(lx2,sy+74);c.lineTo(lx2,sy+94);c.stroke();}
+     c.fillStyle='rgba(176,70,58,.7)';c.font='600 10px ui-monospace,monospace';c.fillText('→ redward',sx+sw-60,sy+108);
+   }};
+})();
+</script>
+</body></html>
