@@ -1,0 +1,9 @@
+ROOT0-DLW-CHAIN-v1
+index : 1511
+slug  : the-redshift
+seal  : 4afb4d6a677cbcbc4ef36d5ea8cb33d820b745ec4f793c4a0c8ec04cc48e6639
+prev  : eb4755239533e9395bef44c10596ef48cb5b769940bb7f5ceefdfe0395b16acc
+link  : 4735adda68b3dfd095461008c86aaaec7a5ed1f4ba44b71921fdf9a96c286515
+head  : 4d57c7669fef8fdf0a63a98919e51156a3ada1dde1f92fe3b3d919a561d19e2f
+
+— the tether: link = sha256(index|slug|seal|prev). the chain head commits to the whole corpus.
